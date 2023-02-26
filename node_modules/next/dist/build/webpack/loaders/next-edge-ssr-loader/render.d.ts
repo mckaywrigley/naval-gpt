@@ -1,0 +1,27 @@
+import type { NextConfigComplete } from '../../../../server/config-shared';
+import type { DocumentType } from '../../../../shared/lib/utils';
+import type { BuildManifest } from '../../../../server/get-page-files';
+import type { ReactLoadableManifest } from '../../../../server/load-components';
+import type { FontLoaderManifest } from '../../plugins/font-loader-manifest-plugin';
+export declare function getRender({ dev, page, appMod, pageMod, errorMod, error500Mod, pagesType, Document, buildManifest, reactLoadableManifest, appRenderToHTML, pagesRenderToHTML, serverComponentManifest, subresourceIntegrityManifest, serverCSSManifest, config, buildId, fontLoaderManifest, incrementalCacheHandler, }: {
+    pagesType: 'app' | 'pages' | 'root';
+    dev: boolean;
+    page: string;
+    appMod: any;
+    pageMod: any;
+    errorMod: any;
+    error500Mod: any;
+    appRenderToHTML: any;
+    pagesRenderToHTML: any;
+    Document: DocumentType;
+    buildManifest: BuildManifest;
+    reactLoadableManifest: ReactLoadableManifest;
+    subresourceIntegrityManifest?: Record<string, string>;
+    serverComponentManifest: any;
+    serverCSSManifest: any;
+    appServerMod: any;
+    config: NextConfigComplete;
+    buildId: string;
+    fontLoaderManifest: FontLoaderManifest;
+    incrementalCacheHandler?: any;
+}): (request: Request) => Promise<Response>;
