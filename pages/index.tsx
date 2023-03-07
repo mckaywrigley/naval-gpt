@@ -23,7 +23,6 @@ export default function Home() {
 
   const [audio, setAudio] = useState<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentClip, setCurrentClip] = useState<number>(-1);
   const [time, setTime] = useState<number>(0);
 
   const handleSearch = async () => {
@@ -39,7 +38,6 @@ export default function Home() {
 
     setAnswer("");
     setPosts([]);
-    setCurrentClip(-1);
 
     setLoading(true);
 
@@ -81,7 +79,6 @@ export default function Home() {
 
     setAnswer("");
     setPosts([]);
-    setCurrentClip(-1);
 
     setLoading(true);
 
