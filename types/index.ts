@@ -26,3 +26,9 @@ export type NavalJSON = {
   tokens: number;
   sections: NavalSection[];
 };
+
+export type NavalClip = {
+  file: string;
+  content: string;
+  seconds: number;
+};

@@ -29,18 +29,29 @@ const handler = async (req: Request): Promise<Response> => {
     const json = await res.json();
     const embedding = json.data[0].embedding;
 
-    const { data: chunks, error } = await supabaseAdmin.rpc("naval_search", {
+    const { data: posts, error: postsError } = await supabaseAdmin.rpc("naval_posts_search", {
       query_embedding: embedding,
       similarity_threshold: 0.01,
       match_count: matches
     });
 
-    if (error) {
-      console.error(error);
-      return new Response("Error", { status: 500 });
+    if (postsError) {
+      console.error(postsError);
+      return new Response("Posts Error", { status: 500 });
     }
 
-    return new Response(JSON.stringify(chunks), { status: 200 });
+    const { data: clips, error: clipsError } = await supabaseAdmin.rpc("naval_clips_search", {
+      query_embedding: embedding,
+      similarity_threshold: 0.01,
+      match_count: 1
+    });
+
+    if (clipsError) {
+      console.error(clipsError);
+      return new Response("Clips Error", { status: 500 });
+    }
+
+    return new Response(JSON.stringify({ posts, clips }), { status: 200 });
   } catch (error) {
     console.error(error);
     return new Response("Error", { status: 500 });

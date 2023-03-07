@@ -7,8 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "scrape-text": "tsx scripts/text/scrape.ts",
-    "embed-text": "tsx scripts/text/embed.ts"
+    "scrape": "tsx scripts/scrape.ts",
+    "embed-text": "tsx scripts/embed-text.ts",
+    "embed-audio": "tsx scripts/embed-audio.ts"
   },
   "dependencies": {
     "@tabler/icons-react": "^2.7.0",

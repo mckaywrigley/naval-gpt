@@ -18,7 +18,7 @@ export const Footer: FC = () => {
         </a>
         based on
         <a
-          className="hover:opacity-50 ml-1"
+          className="hover:opacity-50 mx-1"
           href="https://twitter.com/naval"
           target="_blank"
           rel="noreferrer"

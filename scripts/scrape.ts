@@ -19,7 +19,7 @@ const scrapePost = async () => {
     let subsections: NavalSubsection[] = [];
 
     if (tag === "H2") {
-      let subsectionIndex = 0;
+      let subsectionIndex = -1;
       let subsectionTitle = "";
       let subsectionHtml = "";
       let subsectionText = "";
@@ -30,9 +30,24 @@ const scrapePost = async () => {
           if ($(el).prop("tagName") === "P") {
             const numChildren = $(el).children().length;
 
-            if ($(el).text() === $(el).children().first().text() && numChildren === 1 && $(el).children().first().text().length > 0 && $(el).children().first().attr("class") === undefined) {
+            let hasStrong = false;
+
+            const checkChildren = (children: any) => {
+              children.each((i: any, el: any) => {
+                if ($(el).prop("tagName") === "STRONG" || $(el).prop("tagName") === "B") {
+                  hasStrong = true;
+                } else {
+                  if ($(el).children().length > 0) {
+                    checkChildren($(el).children());
+                  }
+                }
+              });
+            };
+
+            checkChildren($(el).children());
+
+            if (hasStrong && !$(el).text().startsWith("Naval:") && !$(el).text().startsWith("Nivi:")) {
               subsectionTitle = $(el).children().first().text();
-              console.log("subsectionTitle", subsectionTitle);
 
               subsections.push({
                 title: sectionTitle,
@@ -48,14 +63,14 @@ const scrapePost = async () => {
               subsectionHtml = "";
               subsectionText = "";
             } else {
-              if (subsections.length > 0) {
+              if (subsectionIndex > -1) {
                 subsectionHtml += `<p>${$(el).html()?.replace(/’/g, "'")}</p>`;
                 subsectionText += $(el).text().replace(/’/g, "'");
 
-                subsections[subsectionIndex - 1].html = subsectionHtml;
-                subsections[subsectionIndex - 1].content = subsectionText;
-                subsections[subsectionIndex - 1].length = subsectionText.length;
-                subsections[subsectionIndex - 1].tokens = encode(subsectionText).length;
+                subsections[subsectionIndex].html = subsectionHtml;
+                subsections[subsectionIndex].content = subsectionText;
+                subsections[subsectionIndex].length = subsectionText.length;
+                subsections[subsectionIndex].tokens = encode(subsectionText).length;
               }
             }
           }
@@ -85,13 +100,10 @@ const scrapePost = async () => {
     sections
   };
 
-  console.log("sections", json.sections.length);
-  console.log(
-    "subsections",
-    json.sections.reduce((acc, section) => acc + section.subsections.length, 0)
-  );
-  console.log("length", json.length);
-  console.log("tokens", json.tokens);
+  const sectionCount = json.sections.length;
+  const subsectionCount = json.sections.reduce((acc, section) => acc + section.subsections.length, 0);
 
-  fs.writeFileSync("scripts/text/naval.json", JSON.stringify(json));
+  console.log(`Sections: ${sectionCount}, Subsections: ${subsectionCount}`);
+
+  fs.writeFileSync("scripts/naval.json", JSON.stringify(json));
 })();

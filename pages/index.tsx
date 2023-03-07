@@ -1,7 +1,8 @@
 import { Answer } from "@/components/Answer/Answer";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
-import { NavalSubsection } from "@/types";
+import { Player } from "@/components/Player";
+import { NavalClip, NavalSubsection } from "@/types";
 import { IconArrowRight, IconExternalLink, IconSearch } from "@tabler/icons-react";
 import endent from "endent";
 import Head from "next/head";
@@ -11,14 +12,19 @@ export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [query, setQuery] = useState<string>("");
-  const [chunks, setChunks] = useState<NavalSubsection[]>([]);
+  const [posts, setPosts] = useState<NavalSubsection[]>([]);
   const [answer, setAnswer] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [mode, setMode] = useState<"search" | "chat">("chat");
-  const [matchCount, setMatchCount] = useState<number>(5);
+  const [matchCount, setMatchCount] = useState<number>(3);
   const [apiKey, setApiKey] = useState<string>("");
+
+  const [audio, setAudio] = useState<any>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentClip, setCurrentClip] = useState<number>(-1);
+  const [time, setTime] = useState<number>(0);
 
   const handleSearch = async () => {
     if (!apiKey) {
@@ -32,7 +38,8 @@ export default function Home() {
     }
 
     setAnswer("");
-    setChunks([]);
+    setPosts([]);
+    setCurrentClip(-1);
 
     setLoading(true);
 
@@ -49,9 +56,12 @@ export default function Home() {
       throw new Error(searchResponse.statusText);
     }
 
-    const results: NavalSubsection[] = await searchResponse.json();
+    const results: { posts: NavalSubsection[]; clips: NavalClip[] } = await searchResponse.json();
+    const posts = results.posts;
+    const clip = results.clips[0];
 
-    setChunks(results);
+    setPosts(posts);
+    setTime(clip.seconds);
 
     setLoading(false);
 
@@ -72,7 +82,8 @@ export default function Home() {
     }
 
     setAnswer("");
-    setChunks([]);
+    setPosts([]);
+    setCurrentClip(-1);
 
     setLoading(true);
 
@@ -89,14 +100,17 @@ export default function Home() {
       throw new Error(searchResponse.statusText);
     }
 
-    const results: NavalSubsection[] = await searchResponse.json();
+    const results: { posts: NavalSubsection[]; clips: NavalClip[] } = await searchResponse.json();
+    const posts = results.posts;
+    const clip = results.clips[0];
 
-    setChunks(results);
+    setPosts(posts);
+    setTime(clip.seconds);
 
     const prompt = endent`
     Use the following passages to provide an answer to the query: "${query}"
 
-    ${results?.map((d: any) => d.content).join("\n\n")}
+    ${posts?.map((d: any) => d.content).join("\n\n")}
     `;
 
     const answerResponse = await fetch("/api/answer", {
@@ -164,28 +178,49 @@ export default function Home() {
     localStorage.removeItem("PG_MODE");
 
     setApiKey("");
-    setMatchCount(5);
+    setMatchCount(3);
     setMode("search");
   };
 
   const renderHtml = (html: string) => {
     return (
-      <div
-        className="space-y-[24px]"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <>
+        <div
+          className="mt-4 border-t border-gray-400 pt-4 space-y-4"
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      </>
     );
   };
 
+  const handlePlay = (timestamp: number, isSameClip: boolean) => {
+    if (isSameClip && isPlaying) {
+      audio.pause();
+      setIsPlaying(false);
+      return;
+    } else if (isSameClip && !isPlaying) {
+      audio.play();
+      setIsPlaying(true);
+      return;
+    } else if (!isSameClip) {
+      audio.currentTime = timestamp;
+      audio.play();
+      setIsPlaying(true);
+      return;
+    }
+  };
+
   useEffect(() => {
-    if (matchCount > 10) {
-      setMatchCount(10);
+    if (matchCount > 8) {
+      setMatchCount(8);
     } else if (matchCount < 1) {
       setMatchCount(1);
     }
   }, [matchCount]);
 
   useEffect(() => {
+    setAudio(new Audio("/podcast.mp3"));
+
     const PG_KEY = localStorage.getItem("PG_KEY");
     const PG_MATCH_COUNT = localStorage.getItem("PG_MATCH_COUNT");
     const PG_MODE = localStorage.getItem("PG_MODE");
@@ -253,7 +288,7 @@ export default function Home() {
                   <input
                     type="number"
                     min={1}
-                    max={10}
+                    max={8}
                     value={matchCount}
                     onChange={(e) => setMatchCount(Number(e.target.value))}
                     className="max-w-[400px] block w-full rounded-md border border-gray-300 p-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm"
@@ -359,15 +394,20 @@ export default function Home() {
                 <Answer text={answer} />
 
                 <div className="mt-6 mb-16">
-                  <div className="font-bold text-2xl">Passages</div>
+                  <div className="font-bold text-2xl mb-1">Podcast</div>
+                  <Player
+                    src="https://content.libsyn.com/p/4/b/0/4b0ce4b1beb1c234/Naval-Ep53.mp3?c_id=59607029&cs_id=59607029&response-content-type=audio%2Fmpeg&Expires=1678168236&Signature=KFYJbrE2nYGD6sxLQz52pK65AwGL2SipvnDurdulAv1-dch3EmvYSQ0whXlqnNHiL4MN~dxknGjq2sj~yiWvbfamYRllTSOPlThScygPBIT-WC5laenPoQ7LmEz~UDyGbssSc4JyZ2XuZ8n24xUcS9RdUcxpTMsvjptBY8W2DssqhigLXEivzq-FDJSv5yerQCi-QaB7SDXDiwWD9ujm9BFdjmYhTzZuanHTcmRlbqP9CwaslQcH6P3PhN9Qh6fDIvDq4i-Wn9j4lkdpxXrw5Z-3~ucOQi9cEpwvhj9mckccF2FDxQ2xbPNguZfSGbMzHb86-mKbBaxPXSFW08fSmg__&Key-Pair-Id=K1YS7LZGUP96OI"
+                    startTime={time}
+                  />
+                  <div className="mt-4 font-bold text-2xl">Passages</div>
 
-                  {chunks.map((chunk, index) => (
+                  {posts.map((post, index) => (
                     <div key={index}>
                       <div className="mt-4 border border-zinc-600 rounded-lg p-4">
                         <div className="flex justify-between">
                           <div>
-                            <div className="font-bold text-xl">{chunk.title}</div>
-                            <div className="mt-1 font-bold text-sm">{chunk.subtitle}</div>
+                            <div className="font-bold text-xl">{post.title}</div>
+                            <div className="mt-1 font-bold text-sm">{post.subtitle}</div>
                           </div>
                           <a
                             className="hover:opacity-50 ml-2"
@@ -378,22 +418,29 @@ export default function Home() {
                             <IconExternalLink />
                           </a>
                         </div>
-                        <div className="mt-2">{chunk.content}</div>
+                        {renderHtml(post.html)}
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-            ) : chunks.length > 0 ? (
+            ) : posts.length > 0 ? (
               <div className="mt-6 pb-16">
-                <div className="font-bold text-2xl">Passages</div>
-                {chunks.map((chunk, index) => (
+                <div className="font-bold text-2xl mb-1">Podcast</div>
+                <Player
+                  src="/podcast.mp3"
+                  startTime={time}
+                />
+                <div className="mt-6 font-bold text-2xl">Passages</div>
+                {posts.map((post, index) => (
                   <div key={index}>
                     <div className="mt-4 border border-zinc-600 rounded-lg p-4">
                       <div className="flex justify-between">
-                        <div>
-                          <div className="font-bold text-xl">{chunk.title}</div>
-                          <div className="mt-1 font-bold text-sm">{chunk.subtitle}</div>
+                        <div className="flex items-center">
+                          <div className="ml-4">
+                            <div className="font-bold text-xl">{post.title}</div>
+                            <div className="mt-1 font-bold text-sm">{post.subtitle}</div>
+                          </div>
                         </div>
                         <a
                           className="hover:opacity-50 ml-2"
@@ -404,18 +451,13 @@ export default function Home() {
                           <IconExternalLink />
                         </a>
                       </div>
-                      <div className="mt-2">{chunk.content}</div>
+                      {renderHtml(post.html)}
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <>
-                <div className="mt-6 text-center text-lg">{`AI-powered search & chat for Naval Ravikant's Twitter thread "How To Get Rich."`}</div>
-                {renderHtml(
-                  `<p><span class=\"s1\"><b>Nivi: </b></span><span class=\"s1\">You probably know Naval from his </span><span class=\"s1\"><a href=\"https://twitter.com/naval\">Twitter</a></span><span class=\"s1\"> account. </span></p><p><span class=\"s1\">We're going to talk about his</span><span class=\"s1\"><span class=\"Apple-converted-space\">&nbsp;</span></span><span class=\"s1\">tweetstorm, “</span><span class=\"s1\"><a href=\"https://twitter.com/naval/status/1002103360646823936\">How To Get Rich (without getting lucky)</a></span><span class=\"s1\">.” We'll go through most of the tweets in detail, give Naval a chance to expand on them and generally riff on the topic. He'll probably throw in ideas he hasn't published before.</span></p><p><span class=\"s1\">Naval's the co-founder of </span><span class=\"s1\"><a href=\"http://angel.co\">AngelList</a></span><span class=\"s1\"> and Epinions. He's also a prolific tech investor in companies like Twitter, Uber and many more. </span></p><p><span class=\"s1\"><a href=\"http://twitter.com/nivi\">I'm</a> the co-founder of AngelList with Naval. And I co-authored the </span><span class=\"s1\"><a href=\"http://venturehacks.com\">Venture Hacks</a></span><span class=\"s1\"> blog with him back in the day.</span></p>`
-                )}
-              </>
+              <div className="mt-6 text-center text-lg">{`AI-powered search & chat for Naval Ravikant's Twitter thread "How To Get Rich."`}</div>
             )}
           </div>
         </div>

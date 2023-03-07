@@ -1,7 +1,6 @@
 import { NavalJSON, NavalSection } from "@/types";
 import { loadEnvConfig } from "@next/env";
 import { createClient } from "@supabase/supabase-js";
-import { text } from "cheerio";
 import fs from "fs";
 import { Configuration, OpenAIApi } from "openai";
 
@@ -29,12 +28,12 @@ const generateEmbeddings = async (sections: NavalSection[]) => {
       const [{ embedding }] = embeddingResponse.data.data;
 
       const { data, error } = await supabase
-        .from("naval")
+        .from("naval_posts")
         .insert({
           title,
           subtitle,
           html,
-          text,
+          content,
           length,
           tokens,
           embedding
@@ -53,7 +52,7 @@ const generateEmbeddings = async (sections: NavalSection[]) => {
 };
 
 (async () => {
-  const book: NavalJSON = JSON.parse(fs.readFileSync("scripts/text/naval.json", "utf8"));
+  const book: NavalJSON = JSON.parse(fs.readFileSync("scripts/naval.json", "utf8"));
 
   await generateEmbeddings(book.sections);
 })();
