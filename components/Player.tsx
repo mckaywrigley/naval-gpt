@@ -74,7 +74,7 @@ export const Player: FC<PlayerProps> = ({ src, startTime }) => {
         <div className="mb-4">
           <span>{formatTime(currentTime)}</span>
           <span className="mx-2">/</span>
-          <span>{formatTime(duration)}</span>
+          <span>215:35</span>
         </div>
 
         <div
