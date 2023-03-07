@@ -2,6 +2,10 @@
 
 AI-powered search & chat for Naval Ravikant's Twitter thread "How To Get Rich."
 
+(adding more content soon)
+
+Everything is 100% open source.
+
 ## Dataset
 
 The dataset consists of 2 CSV files containing all text & embeddings used.
@@ -16,9 +20,9 @@ I recommend getting familiar with fetching, cleaning, and storing data as outlin
 
 Naval GPT provides 3 things:
 
-1. A search interface.
-2. A chat interface.
-3. A podcast player.
+1. Search
+2. Chat
+3. Audio
 
 ### Search
 
@@ -42,7 +46,7 @@ Chat builds on top of search. It uses search results to create a prompt that is 
 
 This allows for a chat-like experience where the user can ask questions about the topic and get answers.
 
-### Podcast Player
+### Audio
 
 The podcast player is a simple audio player that plays the [podcast](https://content.libsyn.com/p/4/b/0/4b0ce4b1beb1c234/Naval-Ep53.mp3?c_id=59607029&cs_id=59607029&response-content-type=audio%2Fmpeg&Expires=1678166856&Signature=Lfp~zMHa0ETN00JHMVG8xcCGvTnUonsl8ouhpdaH0A4XLHhMISlMySL2mS4e1q6yvONjTZ4pR9L~YDyaSZ~knatkNEVNloDCHjYQZ6-AMy7Qcd0~XwenWZDkRDbjkLj58QE2c6APgDYZqlio1PyO2m9JSIalKdmR1bWnZ02WV3VVymLQUJAaAZcRIX-X3KyO4IT6xbnyK8BiJfJXOo7uITW~xtY9PoaP3Id8yw0Ckna0uSfv60aOO2BDFO~ZyivpkfnfcEtimZYjFQDLhlzIbJCoOw52NRojeaSy2-T~d870-fd9FvSKkTwYAr04cDNrkBcrlKhzhnYRLwT0wWc6Yg__&Key-Pair-Id=K1YS7LZGUP96OI) for this thread.
 
@@ -149,7 +153,7 @@ There is a 1.2s delay between each request to avoid rate limiting.
 
 It will take 20-30 minutes to run.
 
-1.  Run clip embedding script
+10. Run audio embedding script
 
 ```bash
 npm run embed-audio
