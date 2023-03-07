@@ -65,8 +65,6 @@ export default function Home() {
 
     setLoading(false);
 
-    inputRef.current?.focus();
-
     return results;
   };
 
@@ -144,8 +142,6 @@ export default function Home() {
       const chunkValue = decoder.decode(value);
       setAnswer((prev) => prev + chunkValue);
     }
-
-    inputRef.current?.focus();
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -169,7 +165,6 @@ export default function Home() {
     localStorage.setItem("PG_MODE", mode);
 
     setShowSettings(false);
-    inputRef.current?.focus();
   };
 
   const handleClear = () => {
@@ -236,8 +231,6 @@ export default function Home() {
     if (PG_MODE) {
       setMode(PG_MODE as "search" | "chat");
     }
-
-    inputRef.current?.focus();
   }, []);
 
   return (
