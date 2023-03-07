@@ -382,7 +382,7 @@ export default function Home() {
                 </div>
               </div>
             ) : answer ? (
-              <div className="mt-6">
+              <div className="mt-6 max-w-[350px] sm:max-w-[750px]">
                 <div className="font-bold text-2xl mb-2">Answer</div>
                 <Answer text={answer} />
 
@@ -418,7 +418,7 @@ export default function Home() {
                 </div>
               </div>
             ) : posts.length > 0 ? (
-              <div className="mt-6 pb-16">
+              <div className="pb-16 mt-6 max-w-[350px] sm:max-w-[750px]">
                 <div className="font-bold text-2xl mb-1">Podcast</div>
                 <Player
                   src="/podcast.mp3"

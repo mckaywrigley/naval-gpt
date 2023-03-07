@@ -70,36 +70,15 @@ export const Player: FC<PlayerProps> = ({ src, startTime }) => {
         onTimeUpdate={handleTimeUpdate}
       />
 
-      <div className="flex">
-        <button
-          className="p-2 rounded-full bg-blue-500 text-white mr-3 hover:bg-blue-600"
-          onClick={handleSkipBackward}
-        >
-          <div className="flex items-center">
-            <IconPlayerSkipBackFilled size={14} />
-            <div className="ml-1 text-sm">15s</div>
-          </div>
-        </button>
-
-        <button
-          className="p-2 rounded-full bg-blue-500 text-white mr-3 hover:bg-blue-600"
-          onClick={isPlaying ? handlePause : handlePlay}
-        >
-          {isPlaying ? <IconPlayerPauseFilled size={30} /> : <IconPlayerPlayFilled size={30} />}
-        </button>
-
-        <button
-          className="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600"
-          onClick={handleSkipForward}
-        >
-          <div className="flex items-center">
-            <div className="mr-1 text-sm">15s</div>
-            <IconPlayerSkipForwardFilled size={14} />
-          </div>
-        </button>
+      <div className="flex flex-col items-center">
+        <div className="mb-4">
+          <span>{formatTime(currentTime)}</span>
+          <span className="mx-2">/</span>
+          <span>{formatTime(duration)}</span>
+        </div>
 
         <div
-          className="flex-1 ml-4"
+          className="w-full mb-4"
           style={{ display: "flex", alignItems: "center" }}
         >
           <input
@@ -111,11 +90,35 @@ export const Player: FC<PlayerProps> = ({ src, startTime }) => {
             onChange={handleSliderChange}
             style={{ flexGrow: 1 }}
           />
-          <div className="ml-4">
-            <span>{formatTime(currentTime)}</span>
-            <span className="mx-2">/</span>
-            <span>{formatTime(duration)}</span>
-          </div>
+        </div>
+
+        <div className="flex align-middle">
+          <button
+            className="p-2 rounded-full bg-blue-500 text-white mr-3 hover:bg-blue-600"
+            onClick={handleSkipBackward}
+          >
+            <div className="flex items-center">
+              <IconPlayerSkipBackFilled size={14} />
+              <div className="ml-1 text-sm">15s</div>
+            </div>
+          </button>
+
+          <button
+            className="p-2 rounded-full bg-blue-500 text-white mr-3 hover:bg-blue-600 ml-4"
+            onClick={isPlaying ? handlePause : handlePlay}
+          >
+            {isPlaying ? <IconPlayerPauseFilled size={36} /> : <IconPlayerPlayFilled size={36} />}
+          </button>
+
+          <button
+            className="ml-4 p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600"
+            onClick={handleSkipForward}
+          >
+            <div className="flex items-center">
+              <div className="mr-1 text-sm">15s</div>
+              <IconPlayerSkipForwardFilled size={14} />
+            </div>
+          </button>
         </div>
       </div>
     </div>
