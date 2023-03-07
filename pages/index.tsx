@@ -386,7 +386,7 @@ export default function Home() {
                 <div className="mt-6 mb-16">
                   <div className="font-bold text-2xl mb-1">Podcast</div>
                   <Player
-                    src="https://content.libsyn.com/p/4/b/0/4b0ce4b1beb1c234/Naval-Ep53.mp3?c_id=59607029&cs_id=59607029&response-content-type=audio%2Fmpeg&Expires=1678168236&Signature=KFYJbrE2nYGD6sxLQz52pK65AwGL2SipvnDurdulAv1-dch3EmvYSQ0whXlqnNHiL4MN~dxknGjq2sj~yiWvbfamYRllTSOPlThScygPBIT-WC5laenPoQ7LmEz~UDyGbssSc4JyZ2XuZ8n24xUcS9RdUcxpTMsvjptBY8W2DssqhigLXEivzq-FDJSv5yerQCi-QaB7SDXDiwWD9ujm9BFdjmYhTzZuanHTcmRlbqP9CwaslQcH6P3PhN9Qh6fDIvDq4i-Wn9j4lkdpxXrw5Z-3~ucOQi9cEpwvhj9mckccF2FDxQ2xbPNguZfSGbMzHb86-mKbBaxPXSFW08fSmg__&Key-Pair-Id=K1YS7LZGUP96OI"
+                    src="https://bpdqnusfgakublrthgja.supabase.co/storage/v1/object/sign/naval/naval.mp3?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJuYXZhbC9uYXZhbC5tcDMiLCJpYXQiOjE2NzgxODA5MDQsImV4cCI6MTcwOTcxNjkwNH0.36oSDYAdsKpCTXMBpNoFkjdUMHoumP5KwAPrOMovCjo&t=2023-03-07T09%3A21%3A44.409Z"
                     startTime={time}
                   />
                   <div className="mt-4 font-bold text-2xl">Passages</div>
@@ -418,7 +418,7 @@ export default function Home() {
               <div className="pb-16 mt-6 max-w-[350px] sm:max-w-[750px]">
                 <div className="font-bold text-2xl mb-1">Podcast</div>
                 <Player
-                  src="/podcast.mp3"
+                  src="https://bpdqnusfgakublrthgja.supabase.co/storage/v1/object/sign/naval/naval.mp3?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJuYXZhbC9uYXZhbC5tcDMiLCJpYXQiOjE2NzgxODA5MDQsImV4cCI6MTcwOTcxNjkwNH0.36oSDYAdsKpCTXMBpNoFkjdUMHoumP5KwAPrOMovCjo&t=2023-03-07T09%3A21%3A44.409Z"
                   startTime={time}
                 />
                 <div className="mt-6 font-bold text-2xl">Passages</div>
