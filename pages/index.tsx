@@ -185,23 +185,6 @@ export default function Home() {
     );
   };
 
-  const handlePlay = (timestamp: number, isSameClip: boolean) => {
-    if (isSameClip && isPlaying) {
-      audio.pause();
-      setIsPlaying(false);
-      return;
-    } else if (isSameClip && !isPlaying) {
-      audio.play();
-      setIsPlaying(true);
-      return;
-    } else if (!isSameClip) {
-      audio.currentTime = timestamp;
-      audio.play();
-      setIsPlaying(true);
-      return;
-    }
-  };
-
   useEffect(() => {
     if (matchCount > 8) {
       setMatchCount(8);
