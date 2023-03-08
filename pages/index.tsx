@@ -21,8 +21,6 @@ export default function Home() {
   const [matchCount, setMatchCount] = useState<number>(3);
   const [apiKey, setApiKey] = useState<string>("");
 
-  const [audio, setAudio] = useState<any>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [time, setTime] = useState<number>(0);
 
   const handleSearch = async () => {
@@ -194,8 +192,6 @@ export default function Home() {
   }, [matchCount]);
 
   useEffect(() => {
-    setAudio(new Audio("/podcast.mp3"));
-
     const PG_KEY = localStorage.getItem("PG_KEY");
     const PG_MATCH_COUNT = localStorage.getItem("PG_MATCH_COUNT");
     const PG_MODE = localStorage.getItem("PG_MODE");
